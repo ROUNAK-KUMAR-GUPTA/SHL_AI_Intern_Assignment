@@ -1,126 +1,175 @@
 # Conversational SHL Assessment Recommender
 
-A FastAPI-based conversational agent that recommends SHL Individual Test Solutions based on hiring needs.
+A FastAPI-based conversational agent that recommends SHL assessments based on user requirements. The chatbot supports multi-turn conversations, recommends relevant SHL assessments, compares assessments, and refines recommendations based on follow-up user input.
 
-## Quick Start
+---
 
-```bash
-# Install dependencies
-pip install -r requirements.txt
+## Live Demo
 
-# Run the server
-python run.py
+### Base URL
+https://shl-ai-intern-assignment-9wf1.onrender.com
 
-# Or with custom host/port
-HOST=0.0.0.0 PORT=8000 python run.py
-```
+### Swagger API Documentation
+https://shl-ai-intern-assignment-9wf1.onrender.com/docs
+
+### Health Check
+https://shl-ai-intern-assignment-9wf1.onrender.com/health
+
+---
+
+## Features
+
+- Conversational SHL Assessment Recommendation
+- Multi-turn conversation support
+- SHL assessment recommendation
+- Assessment comparison
+- Recommendation refinement
+- Health check endpoint
+- Interactive Swagger UI
+- REST API built with FastAPI
+- Deployed on Render
+
+---
 
 ## API Endpoints
 
 ### GET /health
-Returns service health status.
 
-```bash
-curl http://localhost:8000/health
-# {"status": "ok"}
+Checks whether the API is running.
+
+Example Response:
+
+```json
+{
+  "status": "ok"
+}
 ```
+
+---
 
 ### POST /chat
-Send conversation history and receive agent reply with recommendations.
 
-```bash
-curl -X POST http://localhost:8000/chat \
-  -H "Content-Type: application/json" \
-  -d '{
-    "messages": [
-      {"role": "user", "content": "I am hiring for a graduate trainee position and need cognitive, personality, and situational judgement assessments."}
-    ]
-  }'
-```
+Returns conversational assessment recommendations.
 
-**Request Schema:**
+Example Request
+
 ```json
 {
   "messages": [
-    {"role": "user", "content": "..."},
-    {"role": "assistant", "content": "..."},
-    {"role": "user", "content": "..."}
+    {
+      "role": "user",
+      "content": "I am hiring a Java developer."
+    }
   ]
 }
 ```
 
-**Response Schema:**
-```json
-{
-  "reply": "string",
-  "recommendations": [
-    {
-      "name": "string",
-      "url": "string",
-      "test_type": "string"
-    }
-  ],
-  "end_of_conversation": false
-}
-```
+---
 
-## Conversational Behaviors
+## Tech Stack
 
-| Behavior | Description |
-|----------|-------------|
-| **Clarify** | Asks follow-up questions when the query is vague (no specifics about role, technologies, or measurement types) |
-| **Recommend** | Returns 1-10 assessments with names and URLs from the SHL catalog |
-| **Refine** | Handles add/remove modifications to the existing shortlist |
-| **Compare** | Provides grounded comparisons between two assessments using catalog data |
+- Python
+- FastAPI
+- Uvicorn
+- Pydantic
+- NumPy
+- Scikit-learn
+- FAISS
+- Render
+
+---
 
 ## Project Structure
 
 ```
+SHL_AI_Intern_Assignment/
+│
 ├── app/
-│   ├── __init__.py          # Package init
-│   ├── main.py              # FastAPI app with /health and /chat endpoints
-│   ├── agent.py             # Conversational agent pipeline
-│   ├── catalog_loader.py    # Catalog loading, search (TF-IDF + FAISS), and formatting
-│   └── recommender.py       # Recommendation engine (tech keywords, role templates, scoring)
-├── catalog_clean.json       # Cleaned SHL product catalog (377 items)
-├── requirements.txt         # Python dependencies
-├── run.py                   # Server runner
-├── test_api.py              # Comprehensive test suite
-├── approach_document.md     # 2-page approach document
-└── README.md                # This file
+│   ├── main.py
+│   ├── agent.py
+│   ├── recommender.py
+│   └── catalog_loader.py
+│
+├── sample_conversations/
+├── catalog.json
+├── catalog_clean.json
+├── requirements.txt
+├── run.py
+├── README.md
+└── approach_document.md
 ```
 
-## Configuration
+---
 
-### Environment Variables
+## Run Locally
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `HOST` | `0.0.0.0` | Server host |
-| `PORT` | `8000` | Server port |
-| `LLM_API_KEY` | `""` | OpenAI-compatible API key (optional) |
-| `LLM_BASE_URL` | `https://api.openai.com/v1` | LLM API base URL |
-| `LLM_MODEL` | `gpt-4o-mini` | LLM model name |
-
-### Without LLM
-The system works fully without an LLM using rule-based fallbacks for all natural language generation.
-
-## Testing
+Clone the repository
 
 ```bash
-# Start the server first
-python run.py &
-
-# Run the test suite
-python test_api.py
+git clone https://github.com/ROUNAK-KUMAR-GUPTA/SHL_AI_Intern_Assignment.git
 ```
 
-Tests cover: health check, all sample conversations (C1-C10), off-topic refusal, legal question redirection, comparison handling, modification handling, prompt injection resistance, and schema compliance.
+Go to the project folder
 
-## Design Decisions
+```bash
+cd SHL_AI_Intern_Assignment
+```
 
-1. **Hybrid recommendation**: Combines rule-based logic (tech keywords, role templates) with TF-IDF semantic search for best recall
-2. **Stateless design**: All conversation state is in the request payload; no server-side session storage
-3. **Catalog-first URLs**: Every URL in recommendations comes from the scraped catalog—no hallucinations
-4. **Graceful LLM fallback**: Works with or without an LLM API key
-5. **Seniority-aware filtering**: Entry-level items are penalized/filtered for senior/executive queries
+Create a virtual environment
+
+```bash
+python -m venv venv
+```
+
+Activate the virtual environment
+
+Windows
+
+```bash
+venv\Scripts\activate
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the application
+
+```bash
+python run.py
+```
+
+Open Swagger UI
+
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+## Deployment
+
+This project is deployed on Render.
+
+Base URL:
+
+https://shl-ai-intern-assignment-9wf1.onrender.com
+
+---
+
+## Repository
+
+GitHub Repository
+
+https://github.com/ROUNAK-KUMAR-GUPTA/SHL_AI_Intern_Assignment
+
+---
+
+## Author
+
+**Rounak Kumar Gupta**
+
+GitHub:
+https://github.com/ROUNAK-KUMAR-GUPTA
