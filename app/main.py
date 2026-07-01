@@ -19,6 +19,15 @@ app = FastAPI(
     version="1.0.0",
 )
 
+@app.get("/")
+async def root():
+    return {
+        "message": "Welcome to the SHL Assessment Recommender API",
+        "status": "running",
+        "health": "/health",
+        "docs": "/docs"
+    }
+
 # Startup time for cold start tracking
 _start_time = time.time()
 
